@@ -12,7 +12,7 @@ async def run():
         print("Error: No se pudo conectar al dron dentro del tiempo especificado")
         file_path = "coordenadas.txt"  # Ruta del archivo
         with open(file_path, "a") as file:
-            file.write("Error\n")
+            file.write("No se pudo conectar con el dron\n")
         return
 
 
@@ -27,6 +27,11 @@ async def run():
         if health.is_global_position_ok and health.is_home_position_ok:
             print("-- Global position estimate OK")
             break
+        else
+            file_path = "coordenadas.txt"  # Ruta del archivo
+            with open(file_path, "a") as file:
+                file.write("No se pudo acceder al gps\n")
+            return
 
     async for position in drone.telemetry.position():
         orbit_height = position.absolute_altitude_m + 10
