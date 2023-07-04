@@ -1,11 +1,20 @@
 import asyncio
 from mavsdk import System
 from mavsdk.action import OrbitYawBehavior
-
+import sys
 
 async def run():
     drone = System()
-    await drone.connect(system_address="udp://:14540")
+
+    try:
+        await asyncio.wait_for(drone.connect(system_address="udp://:14540"), timeout=3)
+    except asyncio.TimeoutError:
+        print("Error: No se pudo conectar al dron dentro del tiempo especificado")
+        file_path = "coordenadas.txt"  # Ruta del archivo
+        with open(file_path, "a") as file:
+            file.write("Error\n")
+        return
+
 
     print("Waiting for drone to connect...")
     async for state in drone.core.connection_state():
